@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Spire.Pdf.Graphics;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -99,13 +100,15 @@ namespace JsonParserDemo
                             bKSingatureBindingSource.DataSource = bKSingature;
                             DgBKSingature.DataSource = bKSingatureBindingSource;
                             break;
-                        default:
+                        case "PDF":
                             pdf = item._value;
+                            MemoryStream ms = new MemoryStream(Convert.FromBase64String(pdf));
+                            pdfDocumentViewer.LoadFromStream(ms);
+                            pdfDocumentViewer.SetZoom(Spire.PdfViewer.Forms.ZoomMode.FitWidth);
                             break;
                     }
                 }
             }
-
 
         }
 

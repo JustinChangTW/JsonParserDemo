@@ -46,6 +46,8 @@
             this.button2 = new System.Windows.Forms.Button();
             this.CbFunction = new System.Windows.Forms.ComboBox();
             this.TbPostData = new System.Windows.Forms.TextBox();
+            this.TpPdf = new System.Windows.Forms.TabPage();
+            this.pdfDocumentViewer = new Spire.PdfViewer.Forms.PdfDocumentViewer();
             this.salesNoDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.salesUIDDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.salesNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -149,6 +151,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.DgStep03)).BeginInit();
             this.BKSingature.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DgBKSingature)).BeginInit();
+            this.TpPdf.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.saleInfoBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.step01BindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.step02BindingSource)).BeginInit();
@@ -186,6 +189,7 @@
             this.tabControl1.Controls.Add(this.setp02);
             this.tabControl1.Controls.Add(this.setp03);
             this.tabControl1.Controls.Add(this.BKSingature);
+            this.tabControl1.Controls.Add(this.TpPdf);
             this.tabControl1.Location = new System.Drawing.Point(16, 219);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -454,6 +458,37 @@
             this.TbPostData.Name = "TbPostData";
             this.TbPostData.Size = new System.Drawing.Size(831, 101);
             this.TbPostData.TabIndex = 5;
+            // 
+            // TpPdf
+            // 
+            this.TpPdf.Controls.Add(this.pdfDocumentViewer);
+            this.TpPdf.Location = new System.Drawing.Point(4, 25);
+            this.TpPdf.Name = "TpPdf";
+            this.TpPdf.Size = new System.Drawing.Size(827, 335);
+            this.TpPdf.TabIndex = 5;
+            this.TpPdf.Text = "PDF";
+            this.TpPdf.UseVisualStyleBackColor = true;
+            // 
+            // pdfDocumentViewer
+            // 
+            this.pdfDocumentViewer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.pdfDocumentViewer.AutoScroll = true;
+            this.pdfDocumentViewer.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(229)))), ((int)(((byte)(229)))), ((int)(((byte)(229)))));
+            this.pdfDocumentViewer.FormFillEnabled = false;
+            this.pdfDocumentViewer.Location = new System.Drawing.Point(0, 0);
+            this.pdfDocumentViewer.MultiPagesThreshold = 60;
+            this.pdfDocumentViewer.Name = "pdfDocumentViewer";
+            this.pdfDocumentViewer.OnRenderPageExceptionEvent = null;
+            this.pdfDocumentViewer.PageLayoutMode = Spire.PdfViewer.Forms.PageLayoutMode.SinglePageContinuous;
+            this.pdfDocumentViewer.Size = new System.Drawing.Size(824, 335);
+            this.pdfDocumentViewer.TabIndex = 0;
+            this.pdfDocumentViewer.Text = "pdfDocumentViewer";
+            this.pdfDocumentViewer.Threshold = 60;
+            this.pdfDocumentViewer.ViewerMode = Spire.PdfViewer.Forms.PdfViewerMode.PdfViewerMode.MultiPage;
+            this.pdfDocumentViewer.ZoomFactor = 1F;
+            this.pdfDocumentViewer.ZoomMode = Spire.PdfViewer.Forms.ZoomMode.Default;
             // 
             // salesNoDataGridViewTextBoxColumn
             // 
@@ -1196,6 +1231,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.DgStep03)).EndInit();
             this.BKSingature.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.DgBKSingature)).EndInit();
+            this.TpPdf.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.saleInfoBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.step01BindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.step02BindingSource)).EndInit();
@@ -1316,6 +1352,8 @@
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.ComboBox CbFunction;
         private System.Windows.Forms.TextBox TbPostData;
+        private System.Windows.Forms.TabPage TpPdf;
+        private Spire.PdfViewer.Forms.PdfDocumentViewer pdfDocumentViewer;
     }
 }
 
