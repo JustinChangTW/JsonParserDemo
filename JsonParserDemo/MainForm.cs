@@ -66,13 +66,14 @@ namespace JsonParserDemo
             }
             else
             {
-                //data = AdjustData(data);
-                var json = JsonConvert.DeserializeObject<List<KeyValue>>(data);
-                tabControl1.Controls.Clear();
-                foreach (var item in json)
+                try
                 {
-                    try
+                    //data = AdjustData(data);
+                    var json = JsonConvert.DeserializeObject<List<KeyValue>>(data);
+                    tabControl1.Controls.Clear();
+                    foreach (var item in json)
                     {
+
                         Type type = FindTypeFromAssembly(item);
 
                         var tabPage = new TabPage();
@@ -95,11 +96,18 @@ namespace JsonParserDemo
 
                         tabControl1.Controls.Add(tabPage);
 
+
                     }
-                    catch (Exception ex)
-                    {
-                            Console.WriteLine(ex.Message);
-                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    var tabPage = new TabPage();
+                    tabPage.Text = "ERROR";
+                    tabControl1.Controls.Add(StringToView(tabPage, 
+                        new KeyValue { _value = "ParserJson 異常\n" 
+                                                + ex.Message+"\n"
+                                                + ex.StackTrace?.ToString()}));
                 }
             }
 
