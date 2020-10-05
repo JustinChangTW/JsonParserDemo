@@ -72,20 +72,21 @@ namespace JsonParserDemo
                 {
                     try
                     {
-                        Assembly assembly = Assembly.Load("JsonParserDemo");
-                        var type = assembly.GetTypes().FirstOrDefault(x => string.Equals(x.Name, item._key, StringComparison.OrdinalIgnoreCase));
+                        Type type = FindTypeFromAssembly(item);
 
                         var tabPage = new TabPage();
                         tabPage.SuspendLayout();
                         tabPage.Text = item._key;
-                        
+
                         if (type != null)
                         {
                             tabPage = StringToDataGridView(tabPage, type, item);
-                        } else if (item._key == "PDF")
+                        }
+                        else if (item._key == "PDF")
                         {
                             tabPage = StringToBase64PDFView(tabPage, item);
-                        } else
+                        }
+                        else
                         {
                             tabPage = StringToView(tabPage, item);
                         }
@@ -94,13 +95,35 @@ namespace JsonParserDemo
                         tabControl1.Controls.Add(tabPage);
 
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
                             Console.WriteLine(ex.Message);
                     }
                 }
             }
 
+        }
+
+        private static Type FindTypeFromAssembly(KeyValue item)
+        {
+            var directory = new DirectoryInfo(Directory.GetCurrentDirectory());
+            var files = directory.GetFiles("*Model.dll");
+            Type type = null;
+
+            //先載入在執行目錄下的dll檔取出Type
+            foreach(var file in files)
+            {
+                var assembly = Assembly.LoadFile(file.FullName);
+                type = assembly.GetTypes().FirstOrDefault(x => string.Equals(x.Name, item._key, StringComparison.OrdinalIgnoreCase));
+            }
+
+            //如果dll檔中沒有相對應的dll檔，預設從JsonParserDemo取出Type
+            if (type == null)
+            {
+                Assembly assembly = Assembly.Load("JsonParserDemo");
+                type = assembly.GetTypes().FirstOrDefault(x => string.Equals(x.Name, item._key, StringComparison.OrdinalIgnoreCase));
+            }
+            return type;
         }
 
         private TabPage StringToView(TabPage tabPage, KeyValue item)
