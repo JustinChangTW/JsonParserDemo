@@ -68,6 +68,7 @@ namespace JsonParserDemo
             {
                 //data = AdjustData(data);
                 var json = JsonConvert.DeserializeObject<List<KeyValue>>(data);
+                tabControl1.Controls.Clear();
                 foreach (var item in json)
                 {
                     try
