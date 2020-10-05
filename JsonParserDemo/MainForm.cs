@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Spire.Pdf.Graphics;
+using Spire.PdfViewer.Forms;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -8,6 +9,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -26,12 +28,7 @@ namespace JsonParserDemo
 
         public MainForm()
         {
-            InitializeComponent();;
-            DgSaleinfo.Dock = DockStyle.Fill;
-            DgStep01.Dock = DockStyle.Fill;
-            DgStep02.Dock = DockStyle.Fill;
-            DgStep03.Dock = DockStyle.Fill;
-            DgBKSingature.Dock = DockStyle.Fill;
+            InitializeComponent();
         }
 
 
@@ -73,43 +70,86 @@ namespace JsonParserDemo
                 var json = JsonConvert.DeserializeObject<List<KeyValue>>(data);
                 foreach (var item in json)
                 {
-                    switch (item._key)
+                    try
                     {
-                        case "saleinfo":
-                            saleInfo = JsonConvert.DeserializeObject<SaleInfo>(item._value);
-                            saleInfoBindingSource.DataSource = saleInfo;
-                            DgSaleinfo.DataSource = saleInfoBindingSource;
-                            break;
-                        case "step01":
-                            step01Data = JsonConvert.DeserializeObject<Step01>(item._value);
-                            step01BindingSource.DataSource = step01Data;
-                            DgStep01.DataSource = step01BindingSource;
-                            break;
-                        case "step02":
-                            step02Data = JsonConvert.DeserializeObject<Step02>(item._value);
-                            step02BindingSource.DataSource = step02Data;
-                            DgStep02.DataSource = step02BindingSource;
-                            break;
-                        case "step03":
-                            step03 = JsonConvert.DeserializeObject<Step03>(item._value);
-                            step03BindingSource.DataSource = step03;
-                            DgStep03.DataSource = step03BindingSource;
-                            break;
-                        case "BKSingature":
-                            bKSingature = JsonConvert.DeserializeObject<BKSingature>(item._value);
-                            bKSingatureBindingSource.DataSource = bKSingature;
-                            DgBKSingature.DataSource = bKSingatureBindingSource;
-                            break;
-                        case "PDF":
-                            pdf = item._value;
-                            MemoryStream ms = new MemoryStream(Convert.FromBase64String(pdf));
-                            pdfDocumentViewer.LoadFromStream(ms);
-                            pdfDocumentViewer.SetZoom(Spire.PdfViewer.Forms.ZoomMode.FitWidth);
-                            break;
+                        Assembly assembly = Assembly.Load("JsonParserDemo");
+                        var type = assembly.GetTypes().FirstOrDefault(x => string.Equals(x.Name, item._key, StringComparison.OrdinalIgnoreCase));
+
+                        var tabPage = new TabPage();
+                        tabPage.SuspendLayout();
+                        tabPage.Text = item._key;
+                        
+                        if (type != null)
+                        {
+                            tabPage = StringToDataGridView(tabPage, type, item);
+                        } else if (item._key == "PDF")
+                        {
+                            tabPage = StringToBase64PDFView(tabPage, item);
+                        } else
+                        {
+                            tabPage = StringToView(tabPage, item);
+                        }
+
+
+                        tabControl1.Controls.Add(tabPage);
+
+                    }
+                    catch(Exception ex)
+                    {
+                            Console.WriteLine(ex.Message);
                     }
                 }
             }
 
+        }
+
+        private TabPage StringToView(TabPage tabPage, KeyValue item)
+        {
+            var textbox = new TextBox();
+            textbox.Multiline = true;
+            textbox.Size = new System.Drawing.Size(824, 335);
+            textbox.Text = item._value;
+            tabPage.Controls.Add(textbox);
+            tabPage.Text = item._key;
+            return tabPage;
+        }
+
+        private TabPage StringToBase64PDFView(TabPage tabPage, KeyValue item)
+        {
+            pdf = item._value;
+            MemoryStream ms = new MemoryStream(Convert.FromBase64String(pdf));
+            var pdfViewer = new PdfDocumentViewer();
+
+            pdfViewer.LoadFromStream(ms);
+
+            pdfViewer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            pdfViewer.AutoScroll = true;
+            pdfViewer.PageLayoutMode = Spire.PdfViewer.Forms.PageLayoutMode.SinglePageContinuous;
+            pdfViewer.Size = new System.Drawing.Size(824, 335);
+            pdfViewer.ViewerMode = Spire.PdfViewer.Forms.PdfViewerMode.PdfViewerMode.MultiPage;
+            pdfViewer.ZoomFactor = 1F;
+            pdfViewer.ZoomMode = Spire.PdfViewer.Forms.ZoomMode.Default;
+
+            tabPage.Controls.Add(pdfViewer);
+
+            return tabPage;
+        }
+
+        private static TabPage StringToDataGridView(TabPage tabPage,Type type, KeyValue item)
+        {
+
+            var jsondata = JsonConvert.DeserializeObject(item._value, type);
+            var bgs = new BindingSource();
+            bgs.DataSource = jsondata;
+            var dgv = new DataGridView();
+            dgv.Size = new System.Drawing.Size(824, 335);
+            tabPage.Controls.Add(dgv);
+
+            dgv.DataSource = bgs;
+
+            return tabPage;
         }
 
         private void GetDataWithFile()
