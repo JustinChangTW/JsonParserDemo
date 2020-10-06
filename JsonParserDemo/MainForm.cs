@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Spire.Pdf.Graphics;
 using Spire.PdfViewer.Forms;
 using System;
@@ -171,7 +172,6 @@ namespace JsonParserDemo
 
         private static TabPage StringToDataGridView(TabPage tabPage,Type type, KeyValue item)
         {
-
             var jsondata = JsonConvert.DeserializeObject(item._value, type);
             var bgs = new BindingSource();
             bgs.DataSource = jsondata;
@@ -379,7 +379,7 @@ namespace JsonParserDemo
         public string BKPolicySerial { get; set; }
         public string SignId { get; set; }
         public string SignName { get; set; }
-        public string SignDate { get; set; }
+        public DateTime SignDate { get; set; }
         public string SignIP { get; set; }
         public string SignKey { get; set; }
     }
